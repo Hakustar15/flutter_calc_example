@@ -69,16 +69,38 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _addTerm(String term){
+bool isNumeric(String s) {
+ if (s == null) {
+   return false;
+ }
+ return double.tryParse(s) != null;
+}
+
+  void _addTerm(String term) {
     setState(() {
-      equation[equation.length - 1] += term;
+      print(isNumeric(equation[equation.length - 1]));
+      if (isNumeric(equation[equation.length - 1])) {
+        equation[equation.length - 1] += term;
+      } else {
+        equation.add(term);
+      }
     });
   }
 
-  void _addOperator(String term){
+  void _addOperator(String term) {
     setState(() {
       equation.add(term);
     });
+  }
+
+  String _getEquation(){
+    String finalEquation = "";
+
+    for (String e in equation){
+      finalEquation += (e + " ");
+    }
+
+    return finalEquation;
   }
 
   @override
@@ -111,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         border: Border.all(
                             color: Color.fromARGB(49, 237, 4, 4), width: 5),
                         borderRadius: BorderRadius.circular(5)),
-                    child: Text(equation.toString())))
+                    child: Text(_getEquation())))
           ]),
           Center(
               child: SizedBox(
@@ -134,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: const Text("2"),
                       ),
                       FloatingActionButton(
-                        onPressed:() {
+                        onPressed: () {
                           _addTerm("3");
                         },
                         tooltip: 'Increment',
@@ -171,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: const Text("5"),
                       ),
                       FloatingActionButton(
-                        onPressed:() {
+                        onPressed: () {
                           _addTerm("6");
                         },
                         tooltip: 'Increment',
@@ -179,7 +201,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Container(width: 20),
                       FloatingActionButton(
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          _addOperator("-");
+                        },
                         tooltip: 'Increment',
                         child: const Text("-"),
                       )
@@ -192,23 +216,31 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FloatingActionButton(
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          _addTerm("7");
+                        },
                         tooltip: 'Increment',
                         child: const Text("7"),
                       ),
                       FloatingActionButton(
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          _addTerm("8");
+                        },
                         tooltip: 'Increment',
                         child: const Text("8"),
                       ),
                       FloatingActionButton(
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          _addTerm("9");
+                        },
                         tooltip: 'Increment',
                         child: const Text("9"),
                       ),
                       Container(width: 20),
                       FloatingActionButton(
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          _addOperator("x");
+                        },
                         tooltip: 'Increment',
                         child: const Text("x"),
                       )
@@ -228,7 +260,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Container(width: 60),
                       FloatingActionButton(
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          _addOperator("/");
+                        },
                         tooltip: 'Increment',
                         child: const Text("/"),
                       )
