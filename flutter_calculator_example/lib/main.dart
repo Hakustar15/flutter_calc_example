@@ -56,7 +56,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  var equation = ["0"];
+  var equation = [""];
+  String answer = "";
 
   void _incrementCounter() {
     setState(() {
@@ -69,12 +70,60 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-bool isNumeric(String s) {
- if (s == null) {
-   return false;
- }
- return double.tryParse(s) != null;
-}
+  void _sumEquation() {
+    setState(() {
+      int sum = 0;
+
+      for (int i = 0; i < equation.length; i++) {
+        if (isNumeric(equation[i])) {
+          sum += int.parse(equation[i]);
+        }
+      }
+
+      print(sum);
+      answer = sum.toString();
+    });
+  }
+
+  void _answerEquation() {
+    setState(() {
+      int sum = 0;
+      String modifier = "";
+
+      for (int i = 0; i < equation.length; i++) {
+        if (isNumeric(equation[i])) {
+          switch(modifier){
+            case "+":
+              sum += int.parse(equation[i]);
+              break;
+            case "-":
+              sum -= int.parse(equation[i]);
+              break;
+            case "x":
+              sum *= int.parse(equation[i]);
+              break;
+            case "/":
+              sum = (sum ~/ (int.parse(equation[i])));
+              break;
+            default:
+              sum += int.parse(equation[i]);
+          }
+        } else if(!isNumeric(equation[i])){
+          modifier = equation[i];
+        }
+      }
+
+      print(sum);
+      answer = sum.toString();
+    });
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
 
   void _addTerm(String term) {
     setState(() {
@@ -84,19 +133,21 @@ bool isNumeric(String s) {
       } else {
         equation.add(term);
       }
+      answer = "";
     });
   }
 
   void _addOperator(String term) {
     setState(() {
       equation.add(term);
+      answer = "";
     });
   }
 
-  String _getEquation(){
+  String _getEquation() {
     String finalEquation = "";
 
-    for (String e in equation){
+    for (String e in equation) {
       finalEquation += (e + " ");
     }
 
@@ -133,7 +184,7 @@ bool isNumeric(String s) {
                         border: Border.all(
                             color: Color.fromARGB(49, 237, 4, 4), width: 5),
                         borderRadius: BorderRadius.circular(5)),
-                    child: Text(_getEquation())))
+                    child: Text(_getEquation() + " = " + answer)))
           ]),
           Center(
               child: SizedBox(
@@ -265,6 +316,20 @@ bool isNumeric(String s) {
                         },
                         tooltip: 'Increment',
                         child: const Text("/"),
+                      )
+                    ],
+                  ))),
+          Center(
+              child: SizedBox(
+                  width: 250,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(width: 180),
+                      FloatingActionButton(
+                        onPressed: _answerEquation,
+                        tooltip: 'Answer',
+                        child: const Text("="),
                       )
                     ],
                   ))),
